@@ -185,15 +185,15 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown", 
 
 if __name__ == "__main__":
 	
-    home = os.environ['HOME']
     try:
-        mapfile = os.environ['MAPNIK_MAP_FILE']
-    except KeyError:
-        mapfile = home + "/svn.openstreetmap.org/applications/rendering/mapnik/osm-local.xml"
+        mapfile = sys.argv[1] 
+    except IndexError:
+        #mapfile = "/srv/OpenTopoMap/mapnik-14.04/opentopomap.xml"
+        mapfile = "/srv/OpenTopoMap/mapnik-16.04/opentopomap.xml"
     try:
-        tile_dir = os.environ['MAPNIK_TILE_DIR']
-    except KeyError:
-        tile_dir = home + "/osm/tiles/"
+        tile_dir = sys.argv[2]
+    except IndexError:
+        tile_dir = "/srv/OpenTopoMap/tiles_test"
 
     if not tile_dir.endswith('/'):
         tile_dir = tile_dir + '/'
@@ -211,8 +211,8 @@ if __name__ == "__main__":
     #-------------------------------------------------------------------------
     # SKAILS TILES PROCESSIN
     # BoundingBox BBO 2016-11-14 => Europe
-    bbox = (-30.1,34.3,52.7,71.0)
-    render_tiles(bbox, mapfile, tile_dir, 12, 15, "BBOX 2016-11-14")
+    #bbox = (-30.1,34.3,52.7,71.0)
+    #render_tiles(bbox, mapfile, tile_dir, 12, 15, "BBOX 2016-11-14")
     
     # BoundingBox BBO 2016-11-14 => Canada + US
     #bbox = (-168.9,12.9,-51.7,74.7)
@@ -237,8 +237,8 @@ if __name__ == "__main__":
     #render_tiles(bbox, mapfile, tile_dir, minZoom, maxZoom)
 
     # Muenchen
-    #bbox = (11.4,48.07, 11.7,48.22)
-    #render_tiles(bbox, mapfile, tile_dir, 1, 12 , "Muenchen")
+    bbox = (11.4,48.07, 11.7,48.22)
+    render_tiles(bbox, mapfile, tile_dir, 3, 15 , "Muenchen")
 
     # Muenchen+
     #bbox = (11.3,48.01, 12.15,48.44)
