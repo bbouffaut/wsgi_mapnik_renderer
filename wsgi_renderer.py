@@ -56,9 +56,6 @@ def application(environ, start_response):
     wsgi_mapnik.test()
 
     print >> sys.stderr, path
-
-    start_response('200 OK', [('Content-Type', 'text/plain')])
-    return [wsgi_mapnik.mapfile]
     
     # check if we have directories in place
     zoom = "%s" % z
