@@ -53,7 +53,9 @@ def process_response(environ,start_response,tile_uri):
 def application(environ, start_response):
 
     path = re.split('/',environ.get('PATH_INFO', ''))
-    wsgi_mapnik.test()
+    y = int(path.pop())
+    x = int(path.pop())
+    z = int(path.pop())
 
     print >> sys.stderr, path
     
