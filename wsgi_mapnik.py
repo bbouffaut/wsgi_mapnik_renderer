@@ -40,13 +40,12 @@ mapfile = "/srv/OpenTopoMap/mapnik-16.04/opentopomap.xml"
 tiledir = "/srv/OpenTopoMap/tiles_test"
 maxZoom = 15
 
-'''m = mapnik.Map(256, 256)
+m = mapnik.Map(256, 256)
 # Load style XML
 mapnik.load_map(m, mapfile, True)
 # Obtain <Map> projection
 prj = mapnik.Projection(m.srs)
 # Projects between tile pixel co-ordinates and LatLong (EPSG:4326)
 tileproj = GoogleProjection(maxZoom+1)
-'''
 
 print >> sys.stderr, 'load wsgi_mapnik...'

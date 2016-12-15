@@ -60,7 +60,7 @@ def application(environ, start_response):
     start_response('200 OK', [('Content-Type', 'text/plain')])
     return [wsgi_mapnik.mapfile]
     
-    '''# check if we have directories in place
+    # check if we have directories in place
     zoom = "%s" % z
     if not os.path.isdir(tile_dir + zoom):
         os.mkdir(tile_dir + zoom)
@@ -88,4 +88,3 @@ def application(environ, start_response):
         render_tile(environ,tile_uri,x,y,z)
 
     process_response(environ,start_response,tile_uri)
-    '''
