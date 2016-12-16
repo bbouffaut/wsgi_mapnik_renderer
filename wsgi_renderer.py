@@ -55,7 +55,8 @@ def application(environ, start_response):
     path = re.split('/',environ.get('PATH_INFO', ''))
     y = int(path.pop())
     x = int(path.pop())
-    z = int(path.pop())
+    z_string = path.pop()
+    z = int(z_string.split('.')[0])
 
     print >> sys.stderr, path
     
