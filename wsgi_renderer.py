@@ -53,10 +53,10 @@ def process_response(environ,start_response,tile_uri):
 def application(environ, start_response):
 
     path = re.split('/',environ.get('PATH_INFO', ''))
-    y = int(path.pop())
+    y_string = path.pop()
+    y = int(y_string.split('.')[0])
     x = int(path.pop())
-    z_string = path.pop()
-    z = int(z_string.split('.')[0])
+    z = int(path.pop())    
 
     print >> sys.stderr, path
     
