@@ -4,6 +4,14 @@ from subprocess import call
 import sys, os
 import mapnik
 
+DEG_TO_RAD = pi/180
+RAD_TO_DEG = 180/pi
+
+def minmax (a,b,c):
+    a = max(a,b)
+    a = min(a,c)
+    return a
+
 class GoogleProjection:
     def __init__(self,levels=18):
         self.Bc = []
