@@ -20,7 +20,7 @@ def render_tile(environ,tile_uri,x, y, z):
 
     # Convert to map projection (e.g. mercator co-ords EPSG:900913)
     c0 = environ['prj'].forward(environ['mapnik'].Coord(l0[0],l0[1]))
-    c1 = environ['prj'].forward(environ['mapnik'].Coord(l1[0],l1[1]))
+    c1 = environ['prj'].forward(mapnik.Coord(l1[0],l1[1]))
 
     # Bounding box for the tile
     if hasattr(environ['mapnik'],'mapnik_version') and environ['mapnik'].mapnik_version() >= 800:
@@ -28,13 +28,12 @@ def render_tile(environ,tile_uri,x, y, z):
     else:
     	bbox = environ['mapnik'].Envelope(c0.x,c0.y, c1.x,c1.y)
     	
-	render_size = 256
-	environ['m'].resize(render_size, render_size)
 	environ['m'].zoom_to_box(bbox)
 	if(environ['m'].buffer_size < 128):
 		environ['m'].buffer_size = 128
 
     # Render image with default Agg renderer
+    render_size = 256
     im = environ['mapnik'].Image(render_size, render_size)
     environ['mapnik'].render(self.m, im)
     im.save(tile_uri, 'png256')

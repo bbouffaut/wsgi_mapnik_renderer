@@ -48,7 +48,9 @@ mapfile = "/srv/OpenTopoMap/mapnik-16.04/opentopomap.xml"
 tiledir = "/srv/OpenTopoMap/tiles_test"
 maxZoom = 15
 
-m = mapnik.Map(256, 256)
+render_size = 256
+m = mapnik.Map(render_size, render_size)
+m.resize(render_size, render_size)
 # Load style XML
 mapnik.load_map(m, mapfile, True)
 # Obtain <Map> projection
