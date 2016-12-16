@@ -62,22 +62,22 @@ def application(environ, start_response):
     
     # check if we have directories in place
     zoom = "%s" % z
-    if not os.path.isdir(environ['tiledir'] + zoom):
-        os.mkdir(environ['tiledir'] + zoom)
+    if not os.path.isdir(wsgi_mapnik.tiledir + zoom):
+        os.mkdir(wsgi_mapnik.tiledir + zoom)
 
     # Validate x co-ordinate
     if (x < 0) or (x >= 2**z):
         not_found(environ,stadirrt_response)
     # check if we have directories in place
     str_x = "%s" % x
-    if not os.path.isdir(environ['tiledir'] + zoom + '/' + str_x):
-        os.mkdir(environ['tiledir'] + zoom + '/' + str_x)
+    if not os.path.isdir(wsgi_mapnik.tiledir + zoom + '/' + str_x):
+        os.mkdir(wsgi_mapnik.tiledir + zoom + '/' + str_x)
 
     # Validate x co-ordinate
     if (y < 0) or (y >= 2**z):
         not_found(environ,start_response)
     str_y = "%s" % y
-    tile_uri = environ['tiledir'] + zoom + '/' + str_x + '/' + str_y + '.png'
+    tile_uri = wsgi_mapnik.tiledir + zoom + '/' + str_x + '/' + str_y + '.png'
 
     if not os.path.isfile(tile_uri):
         environ['mapnik'] = wsgi_mapnik.mapnik
