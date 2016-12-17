@@ -35,7 +35,7 @@ def render_tile(environ,tile_uri,x, y, z):
     # Render image with default Agg renderer
     render_size = 256
     im = environ['mapnik'].Image(render_size, render_size)
-    environ['mapnik'].render(self.m, im)
+    environ['mapnik'].render(environ['m'], im)
     im.save(tile_uri, 'png256')
 
 def not_found(environ, start_response):
