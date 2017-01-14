@@ -6,12 +6,12 @@ site.addsitedir(directory)
 
 import wsgi_mapnik
 
-print >> sys.stderr, 'Loading app...'
+#print >> sys.stderr, 'Loading app...'
 
 
 def render_tile(environ,tile_uri,x, y, z):
 
-    print >> sys.stderr, 'render_tile x={},y={},z={}'.format(str(x),str(y),str(z))
+#    print >> sys.stderr, 'render_tile x={},y={},z={}'.format(str(x),str(y),str(z))
     # Calculate pixel positions of bottom-left & top-right
     p0 = (x * 256, (y + 1) * 256)
     p1 = ((x + 1) * 256, y * 256)
@@ -38,28 +38,34 @@ def render_tile(environ,tile_uri,x, y, z):
         environ['m'].buffer_size = 128
 
     # Render image with default Agg renderer
-#    print >> sys.stderr, 'render_tile STAGE 2...'
-    im = environ['mapnik'].Image(render_size, render_size)
 #    print >> sys.stderr, 'render_tile STAGE 3...'
-    environ['mapnik'].render(environ['m'], im)
-#    print >> sys.stderr, 'render_tile STAGE 4...'
-    im.save(tile_uri, 'png256')
+    environ['mapnik'].render_to_file(environ['m'], tile_uri)
 #    print >> sys.stderr, 'render_tile DONE!'
 
 def not_found(environ, start_response):
     """Called if no URL matches."""
-    print >> sys.stderr, 'Not Found error'
+#    print >> sys.stderr, 'Not Found error'
     start_response('404 NOT FOUND', [('Content-Type', 'text/plain')])
     return ['Not Found']
 
 
+def launch_rendering(environ,tile_uri,x,y,z):
+#    print >> sys.stderr, 'create tile_uri={}'.format(tile_uri)
+    environ['mapnik'] = wsgi_mapnik.mapnik
+    environ['m'] = m = wsgi_mapnik.m
+    environ['prj'] = wsgi_mapnik.prj
+    environ['tileproj'] = wsgi_mapnik.tileproj
+        
+    render_tile(environ,tile_uri,x,y,z)
+
+
 def process_request(environ,start_response,z,x,y):
-    print >> sys.stderr, 'Entering process_request with z={},x={},y={}'.format(z,x,y)
+#    print >> sys.stderr, 'Entering process_request with z={},x={},y={}'.format(z,x,y)
     # check if we have directories in place
     zoom = "%s" % z
-    print >> sys.stderr, 'dir={}'.format(wsgi_mapnik.tiledir + '/' + zoom)
+#    print >> sys.stderr, 'dir={}'.format(wsgi_mapnik.tiledir + '/' + zoom)
     if not os.path.isdir(wsgi_mapnik.tiledir + '/' + zoom):
-	print >> sys.stderr, 'Create dir {}'.format(wsgi_mapnik.tiledir + '/' + zoom)
+#	print >> sys.stderr, 'Create dir {}'.format(wsgi_mapnik.tiledir + '/' + zoom)
         os.mkdir(wsgi_mapnik.tiledir + '/' + zoom)
 
     # Validate x co-ordinate
@@ -67,9 +73,9 @@ def process_request(environ,start_response,z,x,y):
         not_found(environ,start_response)
     # check if we have directories in place
     str_x = "%s" % x
-    print >> sys.stderr, 'dir={}'.format(wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x)
+#    print >> sys.stderr, 'dir={}'.format(wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x)
     if not os.path.isdir(wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x):
-	print >> sys.stderr, 'Create dir {}'.format(wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x)
+	#print >> sys.stderr, 'Create dir {}'.format(wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x)
         os.mkdir(wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x)
 
     # Validate y co-ordinate
@@ -80,13 +86,12 @@ def process_request(environ,start_response,z,x,y):
     tile_uri = wsgi_mapnik.tiledir + '/' + zoom + '/' + str_x + '/' + str_y + '.png'
 
     if not os.path.isfile(tile_uri):
-	print >> sys.stderr, 'create tile_uri={}'.format(tile_uri)
-        environ['mapnik'] = wsgi_mapnik.mapnik
-        environ['m'] = m = wsgi_mapnik.m
-	environ['prj'] = wsgi_mapnik.prj
-        environ['tileproj'] = wsgi_mapnik.tileproj
-        
-        render_tile(environ,tile_uri,x,y,z)
+	launch_rendering(environ,tile_uri,x,y,z)
+    else:
+    	size = os.path.getsize(tile_uri)
+
+	if z >= 13 and size <= 20000:
+		launch_rendering(environ,tile_uri,x,y,z)
 
     return tile_uri
 
@@ -104,13 +109,13 @@ def application(environ, start_response):
     except ValueError:
         not_found(environ,start_response)   
 
-    print >> sys.stderr, 'z={},x={},y={}'.format(z,x,y)
+    #print >> sys.stderr, 'z={},x={},y={}'.format(z,x,y)
         
     tile_uri = process_request(environ,start_response,z,x,y)
 
     the_file = open(tile_uri,'rb')
     size = os.path.getsize(tile_uri)
-    print >> sys.stderr, 'data_file len={}'.format(str(size))
+    #print >> sys.stderr, 'data_file len={}'.format(str(size))
 
     headers = [('Content-type', 'image/png'), ('Content-Length', str(size))]
     start_response('200 OK', headers)
