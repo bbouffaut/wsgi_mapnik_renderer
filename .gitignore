@@ -1,3 +1,4 @@
 slow_*/
 *.log
 *.pyc
+postgresql*
