@@ -45,7 +45,7 @@ def test():
     print >> sys.stderr, 'wsgi_mapnik is still loaded'
 
 mapfile = "/srv/OpenTopoMap/mapnik-16.04/opentopomap.xml"
-tiledir = "/srv/OpenTopoMap/tiles"
+tiledir = "/srv/OpenTopoMap/tiles-wsgi"
 maxZoom = 15
 
 render_size = 256
